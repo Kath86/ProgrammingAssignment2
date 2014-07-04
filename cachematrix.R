@@ -2,8 +2,8 @@
 ## 1. set the mean to NULL for starters
 ## 2. create a setter that caches x and m
 ## 3. create a getter that returns the cached x
-## 4. create a getmen function that returns the mean, only calculating it if necessary
-## 5. return the makeCacheMatrix object as a lis of 4 functions
+## 4. create a getInverse function that returns the solve, only calculating it if necessary
+## 5. return the makeCacheMatrix object as a list of 4 functions
                                                                    
  makeCacheMatrix <- function(x = matrix()) {
          m <- NULL
@@ -14,11 +14,10 @@
          get <- function(){
                  x
          } 
-         setmean <- function(mean) m <<-mean
-         getMean <- function(){
-                 m
-         } 
-         list(set = set, get = get,setmean = setmean,getmean = getmean)      
+         ## defines a function to get the values in a matrix
+         setInverse <- function(solve) m <<-solve
+         getInverse <- function() m
+         list(set = set, get = get, setInverse = setInverse, getInverse = getInverse)      
  }
          
                                                                                                                                       
@@ -31,13 +30,17 @@
                                                                    
 cacheSolve <- function(x, ...) {                             
        ## Return a matrix that is the inverse of 'x'  
-        m <- x$getmean()
-        if(is.null(m)) {
+        m <- x$getInverse()
+        
+        ## in the case the inverse has already been calculated and the matrix has not changed 
+        ## then the cachesolve function retrieves the inverse from the cache
+        if(!is.null(m)) {
                 message("getting cached data")
                 return(m)
         }
+        
+        ## if the inverse has not yet been calculated
         data <- x$get()
         m <- mean(data, ...)
-        x$setmean(m)
-        m
+        x$setInverse(m)
  }
